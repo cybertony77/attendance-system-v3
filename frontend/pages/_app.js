@@ -2,11 +2,12 @@ import "@/styles/globals.css";
 import '@mantine/core/styles.css';
 import { MantineProvider } from '@mantine/core';
 import { useRouter } from "next/router";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { getApiBaseUrl } from "../config";
 import axios from "axios";
+import Image from "next/image";
 
 // Client-side redirect component
 function ClientRedirect({ to }) {
@@ -34,12 +35,12 @@ function Preloader() {
       justifyContent: 'center',
       zIndex: 9999
     }}>
-      <img 
+      <Image 
         src="/logo.png" 
         alt="TopPhysics Logo" 
+        width={150}
+        height={150}
         style={{
-          width: '150px',
-          height: '150px',
           objectFit: 'cover',
           background: 'transparent'
         }}
@@ -177,8 +178,8 @@ export default function App({ Component, pageProps }) {
   const [showExpiryWarning, setShowExpiryWarning] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Define public pages at the top to avoid reference errors
-  const publicPages = ["/", "/404", "/contact_developer"];
+  // Define public pages using useMemo to prevent recreation on every render
+  const publicPages = useMemo(() => ["/", "/404", "/contact_developer"], []);
 
   // Global navigation interceptor
   useEffect(() => {
